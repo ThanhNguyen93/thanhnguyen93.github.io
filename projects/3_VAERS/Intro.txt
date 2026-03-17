@@ -1,0 +1,2 @@
+To explore vaccine hesitancy, I analyzed COVID-19 adverse event data from VAERS (CDC/FDA). Using association rule mining, I identified frequent symptom patterns and compared differences in reported adverse events between Moderna and Pfizer vaccines.
+Key insight: Adverse event patterns were broadly similar between Moderna and Pfizer, suggesting perceived safety differences may be driven more by reporting frequency than fundamentally different symptom profiles.

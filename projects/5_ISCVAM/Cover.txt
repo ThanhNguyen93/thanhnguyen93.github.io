@@ -1,0 +1,1 @@
+ISCVAM is an interactive single-cell multiomics tool that integrates sc-RNA and sc-ATAC data, uncovers rare cell populations through flexible clustering, and allows side-by-side validation across datasets—accelerating discovery in complex single-cell studies.

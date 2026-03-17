@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FDA MAUDE Dashboard — Thanh M. Brown</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <style>
+    .proj-shell {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      min-height: 100vh;
+      max-width: 1280px;
+      margin: 0 auto;
+      background: var(--white);
+      box-shadow: 0 0 0 1px var(--border);
+    }
+    .proj-main {
+      border-left: 1px solid var(--border);
+      min-width: 0;
+    }
+    .proj-topbar {
+      padding: 1.6rem 2.5rem 1.4rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--white);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .proj-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    .proj-back:hover { color: var(--teal); }
+    .proj-topbar-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+    .proj-hero {
+      padding: 2.8rem 2.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .proj-body {
+      padding: 2.5rem;
+    }
+    /* Notebook styles */
+    .nb-cell { margin-bottom: 0; }
+    .nb-markdown {
+      padding: 0.6rem 2.5rem;
+      font-size: 0.93rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    .nb-markdown h1,.nb-markdown h2,.nb-markdown h3,.nb-markdown h4 {
+      font-family: 'Fraunces', serif;
+      color: var(--ink);
+      margin: 1.4rem 0 0.5rem;
+    }
+    .nb-markdown h3 { font-size: 1.05rem; }
+    .nb-markdown h4 { font-size: 0.93rem; color: var(--muted); }
+    .nb-markdown ul { padding-left: 1.4rem; margin: 0.4rem 0; }
+    .nb-markdown li { margin-bottom: 0.2rem; }
+    .nb-markdown code {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78em;
+      background: var(--off2);
+      padding: 0.1em 0.35em;
+      border-radius: 3px;
+    }
+    .nb-markdown strong { color: var(--text); font-weight: 500; }
+    .nb-code {
+      background: #F9F7F4;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .nb-source {
+      padding: 1rem 2.5rem;
+      overflow-x: auto;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.76rem;
+      line-height: 1.6;
+      color: var(--navy);
+      margin: 0;
+    }
+    .nb-output { padding: 0.5rem 2.5rem 1rem; }
+    .nb-stream pre {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: pre-wrap;
+      background: var(--off);
+      padding: 0.8rem 1rem;
+      border-radius: 6px;
+      border-left: 3px solid var(--border2);
+    }
+    .nb-img img {
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .nb-table { overflow-x: auto; font-size: 0.8rem; }
+    .nb-table table { border-collapse: collapse; min-width: 400px; }
+    .nb-table th { background: var(--off2); padding: 0.4rem 0.7rem; text-align: left; font-size: 0.75rem; border-bottom: 2px solid var(--border2); }
+    .nb-table td { padding: 0.35rem 0.7rem; border-bottom: 1px solid var(--border); }
+    .nb-table tr:hover td { background: var(--off); }
+    /* Poster/image */
+    .poster-wrap {
+      background: var(--off);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 0;
+    }
+    .poster-wrap img {
+      width: 100%;
+      display: block;
+    }
+    .proj-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 1rem; }
+    .proj-links { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.5rem; }
+    @media (max-width: 860px) {
+      .proj-shell { grid-template-columns: 1fr; }
+      .left-sidebar { display: none; }
+      .proj-topbar, .proj-hero, .proj-body, .nb-markdown, .nb-source, .nb-output { padding-left: 1.4rem; padding-right: 1.4rem; }
+    }
+  </style>
+  
+</head>
+<body>
+<div class="proj-shell">
+  <aside class="left-sidebar">
+    <div class="profile-avatar">TB</div>
+    <div class="profile-name">Thanh M. Brown</div>
+    <p class="profile-tagline">Data Scientist · Bioinformatics · ML · Health Data</p>
+    <div class="profile-pill">
+      <span class="profile-pill-dot"></span>
+      Open to Data Science roles
+    </div>
+    <div class="sidebar-divider"></div>
+    <ul class="sidebar-nav">
+      <li><a href="../index.html" ><span class="nav-icon">⌂</span> Home</a></li>
+      <li><a href="../index.html#skills"><span class="nav-icon">⚙</span> Skills</a></li>
+      <li><a href="../index.html#projects" class="active"><span class="nav-icon">◈</span> Projects</a></li>
+      <li><a href="../index.html#about"><span class="nav-icon">◯</span> About</a></li>
+      <li><a href="../index.html#about"><span class="nav-icon">✉</span> Contact</a></li>
+    </ul>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-socials">
+      <a href="https://github.com/ThanhNguyen93" target="_blank" class="social-btn">gh ↗</a>
+      <a href="https://www.linkedin.com/in/thanhnguyen5493/" target="_blank" class="social-btn">in ↗</a>
+      <a href="mailto:thanh.brown05@gmail.com" class="social-btn">✉</a>
+    </div>
+  </aside>
+  <main class="proj-main">
+    <div class="proj-topbar">
+      <a href="../../index.html#projects" class="proj-back">← Back to Projects</a>
+      <span class="proj-topbar-title">FDA MAUDE Dashboard</span>
+    </div>
+    <div class="proj-hero">
+      <p class="eyebrow">04 — FDA Data · R · Interactive App</p>
+      <h1 class="section-title" style="margin-bottom:0.8rem;">FDA Medical Device Harm Trends — RShiny Dashboard</h1>
+      <p style="font-size:0.93rem;color:var(--muted);line-height:1.8;max-width:620px;">Built an interactive visualization app over the 2016 MAUDE (FDA medical device passive surveillance) dataset. Users explore temporal harm trends across device categories and manufacturers. Demonstrates stakeholder-facing data product design.</p>
+      <div class="proj-tags">
+        <span class="tag tag-teal">RShiny</span>
+        <span class="tag tag-navy">FDA · MAUDE</span>
+        <span class="tag tag-muted">Time-series</span>
+        <span class="tag tag-muted">Dashboard</span>
+        <span class="tag tag-muted">R</span>
+      </div>
+      <div class="proj-links">
+        <a href="https://maude2016viz.shinyapps.io/r_viz_maude_16/" target="_blank" class="btn btn-primary">Live App ↗</a>
+        <a href="https://github.com/ThanhNguyen93/Maude_viz" target="_blank" class="btn btn-outline">GitHub ↗</a>
+      </div>
+    </div>
+    <div class="proj-body">
+      <p class="eyebrow" style="margin-bottom:0.8rem;">Live Preview</p>
+      <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--off);">
+        <div style="padding:0.75rem 1.2rem;background:var(--off2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.6rem;">
+          <span style="width:10px;height:10px;border-radius:50%;background:#E57373;display:inline-block;"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#FFB74D;display:inline-block;"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#81C784;display:inline-block;"></span>
+          <span style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--dim);margin-left:0.5rem;">maude2016viz.shinyapps.io/r_viz_maude_16/</span>
+        </div>
+        <iframe src="https://maude2016viz.shinyapps.io/r_viz_maude_16/" style="width:100%;height:72vh;border:none;display:block;" title="MAUDE RShiny App" loading="lazy"></iframe>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

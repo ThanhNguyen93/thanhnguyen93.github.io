@@ -1,0 +1,9 @@
+ISCVAM – Interactive Single-cell Visual Analytics for Multiomics
+
+ISCVAM is an interactive visual analytics platform designed for single-cell multiome data. It enables researchers to explore and interpret complex single-cell datasets through:
+- Multi-modal visualization – Integrate sc-RNA and sc-ATAC data to study both transcriptomic and epigenetic profiles of cells.
+- Flexible clustering – Apply multiple single-cell clustering resolutions to identify rare or subtle cell populations.
+- Cross-dataset comparison – Simultaneously examine up to three datasets to validate findings and ensure reproducibility.
+
+* Access ISCVAM here: https://chenlab.chpc.utah.edu/iscvam/
+* Our work was accepted for presentation at AACR 2023: Abstract link
