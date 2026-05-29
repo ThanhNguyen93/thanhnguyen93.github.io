@@ -731,3 +731,23 @@ a { color: inherit; text-decoration: none; }
   .project-links { flex-direction: row; }
   .site-footer { flex-direction: column; gap: 0.4rem; padding: 1.2rem; }
 }
+
+.project-preview {
+  margin-top: 1.2rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  max-height: 200px;
+}
+
+.project-preview img {
+  width: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.project-card:hover .project-preview img {
+  transform: scale(1.03);
+}
