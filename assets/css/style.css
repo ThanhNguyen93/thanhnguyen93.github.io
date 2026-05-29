@@ -363,7 +363,7 @@ a { color: inherit; text-decoration: none; }
   background: var(--white);
   padding: 1.8rem 2rem;
   display: grid;
-  grid-template-columns: 1fr 220px auto;  /* text | preview | buttons */
+  grid-template-columns: 1fr 240px;
   gap: 1.5rem;
   align-items: start;
   position: relative;
@@ -722,12 +722,11 @@ a { color: inherit; text-decoration: none; }
 }
 
 .project-preview {
+  margin-top: 0.8rem;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--border);
-  height: 140px;
-  margin-top: 0;
-  align-self: center;
+  height: 160px;
 }
 
 .project-preview img {
