@@ -363,23 +363,12 @@ a { color: inherit; text-decoration: none; }
   background: var(--white);
   padding: 1.8rem 2rem;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr 220px auto;  /* text | preview | buttons */
   gap: 1.5rem;
   align-items: start;
   position: relative;
   transition: background 0.15s;
 }
-.project-card::after {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: transparent;
-  transition: background 0.2s;
-}
-.project-card:hover { background: var(--off); }
-.project-card:hover::after,
-.project-card.featured::after { background: var(--teal); }
 
 .project-num {
   font-family: 'DM Mono', monospace;
@@ -733,11 +722,12 @@ a { color: inherit; text-decoration: none; }
 }
 
 .project-preview {
-  margin-top: 1.2rem;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--border);
-  max-height: 200px;
+  height: 140px;
+  margin-top: 0;
+  align-self: center;
 }
 
 .project-preview img {
