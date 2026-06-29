@@ -314,5 +314,64 @@
 
 </div>
 <script src="assets/js/main.js"></script>
+
+<script>
+  // ── GA4 Click Tracking ──────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function () {
+
+    // 1. Project card buttons (Live App, GitHub, View Project)
+    document.querySelectorAll('.project-card .project-links a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        var card = link.closest('.project-card');
+        var titleEl = card ? card.querySelector('.project-title') : null;
+        var projectTitle = titleEl ? titleEl.textContent.trim() : 'Unknown';
+        gtag('event', 'project_click', {
+          project_name: projectTitle,
+          button_label: link.textContent.trim(),
+          link_url: link.href
+        });
+      });
+    });
+
+    // 2. Hero section buttons (View Projects, GitHub, LinkedIn)
+    document.querySelectorAll('.hero-actions a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        gtag('event', 'hero_click', {
+          button_label: link.textContent.trim(),
+          link_url: link.href
+        });
+      });
+    });
+
+    // 3. Sidebar nav links
+    document.querySelectorAll('.sidebar-nav a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        gtag('event', 'nav_click', {
+          section: link.getAttribute('data-section') || link.textContent.trim()
+        });
+      });
+    });
+
+    // 4. Sidebar social buttons (GitHub, LinkedIn, Email)
+    document.querySelectorAll('.sidebar-socials a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        gtag('event', 'social_click', {
+          platform: link.textContent.trim(),
+          link_url: link.href
+        });
+      });
+    });
+
+    // 5. Contact section links
+    document.querySelectorAll('.contact-list a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        gtag('event', 'contact_click', {
+          link_url: link.href
+        });
+      });
+    });
+
+  });
+</script>
 </body>
 </html>
