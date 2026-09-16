@@ -166,22 +166,24 @@
          <!-- 02 — Osteoporosis -->
         <div class="project-card" id="project-2">
           <div>
-            <p class="project-num">02 — Clinical ML · Python · Scikit-learn</p>
-            <h3 class="project-title">Osteoporosis Risk Prediction with Ensemble Methods</h3>
-            <p class="project-desc">Explored an osteoporosis case-control dataset through demographic-driven EDA and built classification models (Logistic Regression, Random Forest, SVM, Gradient Boosting). Top models achieved strong ROC performance, but consistently favored the negative class — highlighting the real-world challenges of identifying positive cases in imbalanced clinical data.</p>
+            <p class="project-num">02 — Clinical ML · Epidemiology · Python</p>
+            <h3 class="project-title">Osteoporosis Risk — Recall Asymmetry in Matched Case-Control Data</h3>
+            <p class="project-desc"><strong>Why do models miss cases on a perfectly balanced dataset?</strong> In a 1:1 matched cohort of 61,026 osteoporosis patients, classifiers from logistic regression and linear SVM to tree ensembles and a feed-forward neural network miss 40–49% of cases, despite exact class balance and ROC-AUCs up to 0.79. After validating the cohort by reproducing a published hyponatremia odds ratio (3.98 vs. 3.97), I use diagnostic analyses to test whether the recall gap stems from model limitations or from properties of the matched observational data.</p>
             <div class="project-tags">
               <span class="tag tag-teal">Classification</span>
-              <span class="tag tag-navy">EDA</span>
-              <span class="tag tag-muted">ROC/AUC</span>
-              <span class="tag tag-muted">Class Imbalance</span>
+              <span class="tag tag-navy">Case-Control Design</span>
+              <span class="tag tag-muted">Conditional Logistic Regression</span>
+              <span class="tag tag-muted">Model Diagnostics</span>
+              <span class="tag tag-muted">XGBoost</span>
+              <span class="tag tag-muted">Neural Network</span>
               <span class="tag tag-muted">Scikit-learn</span>
             </div>
           </div>
           <div class="project-links">
             <a href="projects/project-osteo.html" class="link-btn primary">View Project →</a>
-            <a href="https://github.com/ThanhNguyen93" target="_blank" class="link-btn">GitHub ↗</a>
+            <a href="https://github.com/ThanhNguyen93/osteoporosis_risk_classifier" target="_blank" rel="noopener" class="link-btn">GitHub ↗</a>
             <div class="project-preview">
-              <img src="assets/img/osteo-screenshot.png" alt="Osteoporosis Risk Prediction screenshot">
+              <img src="assets/img/osteo-probability-distributions.png" alt="Out-of-fold predicted probability by true class for logistic regression, random forest, linear SVM, and XGBoost, showing cases split between a high-confidence peak and a group overlapping controls below the 0.5 cutoff">
             </div>
           </div>
         </div>
