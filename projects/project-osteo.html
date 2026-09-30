@@ -412,6 +412,8 @@ main > section.beat h2::before{
       <dd>Full-record lab summaries include post-diagnosis measurements (sodium is recorded for 99.6% of patients across the full record vs. 67.4% before the index date), so all full-record features were excluded.</dd>
       <dt>Pair-grouped cross-validation</dt>
       <dd>Folds are assigned by matched stratum, so a case and its matched control never fall on opposite sides of a split.</dd>
+      <dt>Within-pair discrimination</dt>
+      <dd>Global AUC pools all cases against all controls, so it can reflect differences between matched pairs rather than between a case and its own control. Within-pair accuracy (pair_acc, equivalent to within-stratum AUC in 1:1 matching) is reported alongside it, since it tests the comparison the design supports.</dd>
     </dl>
       </div>
   </section>
