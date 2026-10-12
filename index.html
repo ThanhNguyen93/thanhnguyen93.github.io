@@ -138,32 +138,67 @@
 
       <div class="projects-list reveal">
 
-           <!-- 01 — ISCVAM -->
-        <div class="project-card" id="project-1">
+      
+        <!-- 01 — Clinical Trial Early Termination Risk -->
+      <div class="project-card featured" id="project-1">
           <div>
-            <p class="project-num">01 — Data Pipeline Engineering - Clinical Analytics Platform</p>
-            <h3 class="project-title">ISCVAM — Multi-Study Oncology Data Pipelines <span class="new-badge"> Cancer Research</span></h3>
+            <p class="project-num">
+              01 — Healthcare ML · NLP · Temporal Validation 
+            </p>
+
+            <h3 class="project-title">
+              Predicting Clinical Trial Early Termination Risk
+              <span class="new-badge">Interactive ML application</span>
+            </h3>
+
             <p class="project-desc">
-              Experimental scientists had no direct computational path to their own data, leaving finished experiments stuck in an analyst queue. I built the automated data layer that removed the delay: two containerized R pipelines handling end-to-end ingestion, quality control, and cell-type annotation across 198 studies (~6.3M cells). Orchestrated on Slurm job arrays with size-aware scheduling and per-step checkpointing, the pipelines convert raw sequencing output into standardized HDF5 datasets the platform reads directly. Platform accepted for presentation at AACR 2023.
-              <div class="project-tags">
-              <span class="tag tag-coral">R</span>
-              <span class="tag tag-coral">Pipeline design</span>
-              <span class="tag tag-navy">HPC-slurm</span>
-              <span class="tag tag-muted">Checkpointing</span>
-              <span class="tag tag-muted">Research</span>
+              <strong>Can a clinical trial's registration record reveal elevated
+              termination risk before outcomes are known?</strong>
+
+              Using 193,378 interventional trials from AACT
+              (ClinicalTrials.gov), I developed an XGBoost classifier combining
+              structured registration data with eligibility-criteria text
+              (TF-IDF + SVD). A strict temporal split evaluates performance on
+              future trials, with leak-prone features excluded.
+
+              <strong>Results:</strong> 0.777 test ROC-AUC. The top 5% of
+              trials by predicted risk captured 40.7% of all terminated trials.
+              Adding text features improved test AUC by 0.024 over tabular
+              features alone.
+
+              The analysis also revealed that text-derived signals largely
+              reflected study population characteristics, reinforcing the
+              model's role as a risk-ranking tool—not a causal explanation.
+            </p>
+
+            <div class="project-tags">
+              <span class="tag tag-teal">XGBoost</span>
+              <span class="tag tag-navy">NLP · TF-IDF + SVD</span>
+              <span class="tag tag-navy">Temporal Validation</span>
+              <span class="tag tag-muted">Calibration</span>
+              <span class="tag tag-muted">Subgroup analysis</span>
+              <span class="tag tag-muted">SHAP</span>
+              <span class="tag tag-muted">Databricks · Google Cloud Run</span>
             </div>
           </div>
+
           <div class="project-links">
-            <a href="projects/project-iscvam.html" class="link-btn primary">View Project →</a>
-            <a href="https://github.com/AnnChenLab/ISCVAM" target="_blank" class="link-btn">GitHub ↗</a>
+            <a href="https://early-termination-risk-1011623229464.us-east1.run.app"
+              target="_blank" rel="noopener noreferrer"
+              class="link-btn primary">Explore Live Demo →</a>
+
+            <a href="https://github.com/ThanhNguyen93/clinical-trial-termination-risk"
+              target="_blank" rel="noopener noreferrer"
+              class="link-btn">View Source Code ↗</a>
+
             <div class="project-preview">
-              <img src="assets/img/iscvam-screenshot.png" alt="ISCVAM screenshot">
+              <img src="assets/img/termination-risk-screenshot.png"
+                  alt="Interactive clinical trial early termination risk application">
             </div>
           </div>
         </div>
 
-
-         <!-- 02 — Osteoporosis -->
+        <!-- 02 — Osteoporosis -->
         <div class="project-card" id="project-2">
           <div>
             <p class="project-num">02 — Clinical ML · Epidemiology · Python</p>
@@ -188,11 +223,38 @@
           </div>
         </div>
 
+           <!-- 03 — ISCVAM -->
+        <div class="project-card" id="project-3">
+          <div>
+            <p class="project-num">03 — Data Pipeline Engineering - Clinical Analytics Platform</p>
+            <h3 class="project-title">ISCVAM — Multi-Study Oncology Data Pipelines <span class="new-badge"> Cancer Research</span></h3>
+            <p class="project-desc">
+              Experimental scientists had no direct computational path to their own data, leaving finished experiments stuck in an analyst queue. I built the automated data layer that removed the delay: two containerized R pipelines handling end-to-end ingestion, quality control, and cell-type annotation across 198 studies (~6.3M cells). Orchestrated on Slurm job arrays with size-aware scheduling and per-step checkpointing, the pipelines convert raw sequencing output into standardized HDF5 datasets the platform reads directly. Platform accepted for presentation at AACR 2023.
+              <div class="project-tags">
+              <span class="tag tag-coral">R</span>
+              <span class="tag tag-coral">Pipeline design</span>
+              <span class="tag tag-navy">HPC-slurm</span>
+              <span class="tag tag-muted">Checkpointing</span>
+              <span class="tag tag-muted">Research</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="projects/project-iscvam.html" class="link-btn primary">View Project →</a>
+            <a href="https://github.com/AnnChenLab/ISCVAM" target="_blank" class="link-btn">GitHub ↗</a>
+            <div class="project-preview">
+              <img src="assets/img/iscvam-screenshot.png" alt="ISCVAM screenshot">
+            </div>
+          </div>
+        </div>
 
-    <!-- 03 — Hiring Intelligence -->
-    <div class="project-card featured" id="project-3">
+
+         
+
+
+    <!-- 04 — Hiring Intelligence -->
+    <div class="project-card featured" id="project-4">
       <div>
-        <p class="project-num">03 — ML App · Streamlit · Scikit-learn</p>
+        <p class="project-num">04 — ML App · Streamlit · Scikit-learn</p>
         <h3 class="project-title">Hiring Intelligence — Recruitment Outcome Predictor</h3>
         <p class="project-desc">End-to-end <strong>ML web app </strong>predicting candidate hiring outcomes using a tuned Gradient Boosting classifier — 94.7% precision, 93.3% ROC-AUC on 1,500 recruitment records. The web app features an <strong>EDA explorer</strong> and <strong>live candidate predictor</strong> with probability gauge and radar chart. 
           Key finding: recruitment strategy (SHAP = 3.052) dominates all candidate-level signals — stronger than interview score, skill score, or education combined. A useful reminder that process design shapes outcomes as much as candidate quality does.
@@ -219,10 +281,10 @@
        
 
 
-        <!-- 04 — MAUDE RShiny -->
-        <div class="project-card" id="project-4">
+        <!-- 05 — MAUDE RShiny -->
+        <div class="project-card" id="project-5">
           <div>
-            <p class="project-num">04 — FDA Data · R · Interactive App</p>
+            <p class="project-num">05 — FDA Data · R · Interactive App</p>
             <h3 class="project-title">FDA Medical Device Harm Trends — RShiny Dashboard</h3>
             <p class="project-desc">Built an interactive visualization app over the 2016 MAUDE (FDA medical device passive surveillance) dataset. Users explore temporal harm trends across device categories and manufacturers. Demonstrates stakeholder-facing data product design.</p>
             <div class="project-tags">
@@ -244,10 +306,10 @@
 
      
 
-        <!-- 05 — VAERS Association Rule Mining -->
-        <div class="project-card" id="project-5">
+        <!-- 06 — VAERS Association Rule Mining -->
+        <div class="project-card" id="project-6">
           <div>
-            <p class="project-num">05 — Public Health · Unsupervised Learning</p>
+            <p class="project-num">06 — Public Health · Unsupervised Learning</p>
             <h3 class="project-title">COVID-19 Vaccine Adverse Symptoms — Association Rule Mining</h3>
             <p class="project-desc">Mined COVID-19 adverse-event reports from <strong>VAERS (CDC/FDA)</strong> using the Apriori algorithm to surface frequent adverse-symptom patterns and compare reported events between <strong>Moderna and Pfizer</strong>. Key insight: adverse-event patterns were broadly similar across both vaccines, suggesting perceived safety differences may be driven more by reporting frequency than by fundamentally different symptom profiles.</p>
             <div class="project-tags">
