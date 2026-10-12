@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Predicting Clinical Trial Early Termination from Registry Data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#F2F3F1; --card:#ffffff; --ink:#16191C; --muted:#5C6470; --rule:#D4D8D4;
+  --signal:#1F5F4B; --signal-soft:#E4EDE8; --hot:#B8621B;
+  --bar:#C5CBC6; --todo:#7C8893;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  /* aliases used by the inline SVG diagrams */
+  --done:var(--signal); --prog:var(--hot); --accent:var(--signal); --accent-soft:var(--signal-soft);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#101517; --card:#171E21; --ink:#E8ECEA; --muted:#9AA5A1; --rule:#2B3539;
+    --signal:#5FC2A0; --signal-soft:#16302A; --hot:#E39A55; --bar:#33403F; --todo:#7F8D99;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#101517; --card:#171E21; --ink:#E8ECEA; --muted:#9AA5A1; --rule:#2B3539;
+  --signal:#5FC2A0; --signal-soft:#16302A; --hot:#E39A55; --bar:#33403F; --todo:#7F8D99;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55}
+p{margin:0 0 10px}
+a{color:var(--signal)}
+a:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+code{font-family:var(--mono);font-size:.84em}
+
+/* ---------- shell: rail + content (small gap) ---------- */
+.shell{max-width:1120px;margin:0 auto;padding:0 20px}
+.col{min-width:0}
+.toc{display:none}
+@media (min-width:1000px){
+  .shell{display:grid;grid-template-columns:168px minmax(0,1fr);gap:12px;padding:0 20px 0 12px}
+  .toc{display:block;position:sticky;top:20px;align-self:start;max-height:calc(100vh - 40px);overflow-y:auto;padding-top:34px}
+}
+
+/* ---------- side contents rail ---------- */
+.toc h2{font-family:var(--mono);font-size:12px;font-weight:400;color:var(--muted);margin:0 0 8px;padding-left:12px}
+.toc ol{list-style:none;margin:0;padding:0;border-left:1px solid var(--rule);counter-reset:toc}
+.toc > ol > li{counter-increment:toc}
+.toc a{display:flex;gap:6px;padding:5px 0 5px 12px;margin-left:-1px;border-left:1px solid transparent;
+  font-family:var(--mono);font-size:11.5px;line-height:1.25;color:var(--muted);text-decoration:none}
+.toc > ol > li > a::before{content:counter(toc,decimal-leading-zero);opacity:.55;flex:none}
+.toc a:hover{color:var(--ink)}
+.toc a[aria-current="true"]{color:var(--signal);border-left-color:var(--signal)}
+.toc a[aria-current="true"]::before{opacity:1}
+.toc ol ol{border-left:0;display:none;margin:0 0 4px}
+.toc li.open > ol{display:block}
+.toc ol ol a{padding:3px 0 3px 30px;font-family:var(--sans);font-size:12px;border-left:0;margin-left:0}
+.toc ol ol a:hover{color:var(--signal)}
+
+/* ---------- hero ---------- */
+.hero{padding:34px 0 18px}
+.eyebrow{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin:0 0 10px}
+.eyebrow b{color:var(--signal);font-weight:500}
+h1{font-size:clamp(27px,4.4vw,38px);line-height:1.15;letter-spacing:-.02em;font-weight:600;margin:0 0 14px}
+.lede{font-size:18px;line-height:1.48;margin:0 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;padding:0;list-style:none}
+.chips li{font-family:var(--mono);font-size:12px;color:var(--muted);border:1px solid var(--rule);border-radius:2px;padding:3px 8px;background:var(--card)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:6px}
+.actions a{font-size:14px;text-decoration:none;padding:7px 14px;border-radius:2px;border:1px solid var(--signal);color:var(--signal)}
+.actions a.primary{background:var(--signal);color:var(--ground)}
+.actions a:hover,.actions a:focus-visible{background:var(--signal);color:var(--ground)}
+.meta{font-size:13px;color:var(--muted);margin:10px 0 0}
+
+/* ---------- scale strip ---------- */
+.scale{margin:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);display:grid;grid-template-columns:repeat(4,1fr)}
+.scale div{padding:12px 12px 12px 0}
+.scale dt{font-family:var(--mono);font-size:22px;font-weight:500;letter-spacing:-.02em;white-space:nowrap}
+.scale dt.hot{color:var(--hot)}
+.scale dd{margin:2px 0 0;font-size:12.5px;color:var(--muted);line-height:1.3}
+
+/* ---------- beat sections: narrow label column ---------- */
+main{counter-reset:sec}
+main > section{counter-increment:sec;display:grid;grid-template-columns:112px minmax(0,1fr);gap:16px;padding:26px 0;border-bottom:1px solid var(--rule);scroll-margin-top:16px}
+main > section > h2{font-size:19px;font-weight:600;line-height:1.2;letter-spacing:-.01em;margin:0}
+main > section > h2::before{content:counter(sec,decimal-leading-zero);display:block;font-family:var(--mono);font-size:12px;font-weight:400;color:var(--signal);margin:0 0 6px}
+.body{min-width:0}
+.body > :first-child{margin-top:0}
+h3{font-size:15px;font-weight:600;margin:16px 0 6px}
+.body > h3:first-child{margin-top:0}
+.note{font-size:13px;color:var(--muted);margin:8px 0 0}
+ul.plain{margin:0;padding-left:18px}
+ul.plain li{margin-bottom:6px}
+
+/* ---------- findings (dl) ---------- */
+.points{margin:0;padding:0}
+.points dt{font-family:var(--mono);font-size:12.5px;color:var(--signal);margin-top:12px;scroll-margin-top:16px}
+.points dt:first-child{margin-top:0}
+.points dd{margin:2px 0 0;padding:0}
+
+/* ---------- callouts ---------- */
+.pull{margin:12px 0 0;padding:11px 14px;background:var(--signal-soft);border-radius:2px;font-size:15px;line-height:1.45}
+.pull p{margin:0}
+.pull.plain{background:var(--card);border:1px solid var(--rule)}
+
+/* ---------- tables ---------- */
+.scroll{overflow-x:auto;background:
+  linear-gradient(to right,var(--ground),var(--ground)) 0 0/24px 100% no-repeat local,
+  linear-gradient(to left,var(--ground),var(--ground)) 100% 0/24px 100% no-repeat local,
+  linear-gradient(to right,rgba(0,0,0,.16),rgba(0,0,0,0)) 0 0/12px 100% no-repeat scroll,
+  linear-gradient(to left,rgba(0,0,0,.16),rgba(0,0,0,0)) 100% 0/12px 100% no-repeat scroll}
+details.more{margin-top:14px;border-top:1px solid var(--rule);padding-top:10px}
+details.more summary{cursor:pointer;font-family:var(--mono);font-size:12.5px;color:var(--signal)}
+details.more summary:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.points + .scroll{margin-top:18px}
+.rtab.ref{min-width:0;max-width:460px;margin-top:8px}
+table{width:100%;border-collapse:collapse}
+.rtab{font-size:13.5px;line-height:1.4;min-width:680px}
+.rtab th{text-align:left;font-family:var(--mono);font-weight:500;font-size:11.5px;color:var(--muted);padding:7px 10px 7px 0;border-bottom:1px solid var(--ink)}
+.rtab td{padding:9px 10px 9px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.rtab td.n,.rtab th.n{text-align:right;font-variant-numeric:tabular-nums;padding-right:12px}
+.rtab td.n{white-space:nowrap}
+.rtab th.n{white-space:normal}
+.rtab td:first-child{font-weight:600}
+.rtab tr.final td{background:var(--signal-soft)}
+.rtab tr.final td:first-child{box-shadow:inset 3px 0 0 var(--signal);padding-left:10px}
+.rtab tr.final th:first-child,.rtab th:first-child{padding-left:0}
+.rtab .role{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.rtab tr.final .role{color:var(--signal)}
+
+.rtab.sub{min-width:640px}
+.rtab tr.grp td{font-family:var(--mono);font-size:11.5px;font-weight:500;color:var(--signal);background:transparent;padding:12px 0 5px;border-bottom:1px solid var(--ink)}
+.matrix{font-size:13.5px;line-height:1.45;min-width:640px}
+.matrix th{text-align:left;font-family:var(--mono);font-weight:500;font-size:11.5px;color:var(--muted);padding:7px 10px 7px 0;border-bottom:1px solid var(--ink)}
+.matrix td{padding:9px 10px 9px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.matrix td:first-child{font-weight:600;width:24%}
+.matrix td.ev{color:var(--muted)}
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;padding:1px 7px;border-radius:2px;border:1px solid;white-space:nowrap}
+.pill.use{color:var(--signal);border-color:var(--signal)}
+.pill.ex{color:var(--muted);border-color:var(--rule)}
+.pill.abl{color:var(--ink);border-color:var(--ink)}
+.pill.rev{color:var(--hot);border-color:var(--hot);border-style:dashed}
+.pill.cav{color:var(--hot);border-color:var(--hot)}
+
+
+/* ---------- diagrams ---------- */
+.diagram{background:var(--card);border:1px solid var(--rule);border-radius:2px;padding:14px}
+.split svg{width:100%;height:auto;display:block}
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .t1{font-size:12px;font-weight:600}
+svg .t2{font-size:11px;fill:var(--muted)}
+.split .s-train{fill:var(--bar);stroke:none}
+.split .s-val{fill:var(--signal-soft);stroke:var(--signal);stroke-width:1.5}
+.split .s-test{fill:var(--card);stroke:var(--signal);stroke-width:2.5}
+.split .dash{fill:none;stroke:var(--rule);stroke-width:1.5;stroke-dasharray:5 4}
+
+footer{padding:20px 0 40px;font-size:13px;color:var(--muted)}
+
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+@media (max-width:720px){
+  body{font-size:17px}
+  .scale{grid-template-columns:1fr 1fr}
+  main > section{grid-template-columns:1fr;gap:10px;padding:22px 0}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav class="toc" aria-label="On this page">
+    <h2 id="toc-label">On this page</h2>
+    <ol aria-labelledby="toc-label">
+      <li><a href="#problem">The problem</a></li>
+      <li><a href="#results">Results so far</a></li>
+      <li><a href="#findings">Findings</a>
+        <ol>
+          <li><a href="#f-rank">Ranking power</a></li>
+          <li><a href="#f-lift">Text lift is stable</a></li>
+          <li><a href="#f-words">Text adds signal</a></li>
+          <li><a href="#f-k">Few components</a></li>
+          <li><a href="#f-proxy">Text as proxy</a></li>
+          <li><a href="#f-model">Why XGBoost</a></li>
+          <li><a href="#f-blend">The blend</a></li>
+        </ol>
+      </li>
+      <li><a href="#subgroups">Subgroups</a></li>
+      <li><a href="#validation">Validation</a></li>
+      <li><a href="#leakage">Leakage control</a></li>
+      <li><a href="#limits">Limits</a></li>
+    </ol>
+  </nav>
+
+  <div class="col">
+    <header class="hero">
+      <p class="eyebrow"><b>Executive summary</b> &mdash; Clinical ML &middot; Registry data &middot; Temporal validation</p>
+      <h1>Predicting clinical trial early termination from registry data</h1>
+      <p class="lede">Can trial registry fields help identify studies at elevated risk of early termination? I tested an XGBoost model that combines structured trial fields with eligibility-criteria text, using 193,378 interventional trials from AACT/ClinicalTrials.gov and a temporal holdout of trials starting in 2020&ndash;2021. Eligibility text adds predictive signal but also reflects therapeutic area, and AACT keeps only the latest record, so the fields approximate registration-time information without being verifiable as such. This is a screening prototype, not a causal model.</p>
+      <ul class="chips">
+        <li>AACT / ClinicalTrials.gov</li><li>XGBoost</li><li>TF-IDF + SVD text features</li><li>PyTorch MLP</li><li>SHAP</li><li>Calibration</li><li>Databricks &middot; Cloud Run</li>
+      </ul>
+      <div class="actions">
+        <a class="primary" href="https://early-termination-risk-1011623229464.us-east1.run.app" target="_blank" rel="noopener">Live dashboard</a>
+      </div>
+      <p class="meta">Thanh M. Brown &middot; Data: AACT (ClinicalTrials.gov), public, snapshot 2026-09-29 &middot; Dashboard live</p>
+    </header>
+
+    <dl class="scale">
+      <div><dt>193,378</dt><dd>interventional trials modeled, started 2008&ndash;2021</dd></div>
+      <div><dt>0.777</dt><dd>test AUC of the final model (95% CI 0.767 to 0.785)</dd></div>
+      <div><dt class="hot">40.7%</dt><dd>precision in the top 5% of test scores, 3.6&times; the 11.2% test base rate</dd></div>
+      <div><dt>+0.024</dt><dd>AUC lift from eligibility text (95% CI +0.019 to +0.030)</dd></div>
+    </dl>
+
+    <main>
+
+      <section id="problem">
+        <h2>The problem</h2>
+        <div class="body">
+          <p>Across the full 2008&ndash;2021 cohort, 11.3% of interventional trials that finished as Completed or Terminated ended Terminated (11.2% in the 2020&ndash;2021 test years). An early termination ties up sponsor capital, site staff and IRB capacity. Low accrual is widely reported as a leading reason, but this project has not yet analyzed stop reasons (<code>why_stopped</code>), so reasons are not a result here.</p>
+          <p>The question is a feasibility review: how much termination risk is visible in the registration record before the first patient is enrolled? The output is a screening and prioritization signal for sponsor feasibility checks, site and network planning, and portfolio triage. It is not a causal model, and it does not say that changing a design parameter would change the outcome.</p>
+        </div>
+      </section>
+
+      <section id="results">
+        <h2>Results so far</h2>
+        <div class="body">
+          <div class="scroll">
+            <table class="rtab">
+              <thead><tr>
+                <th>Model</th><th>Role</th><th class="n">Test AUC (95% interval)</th><th class="n">Test PR-AUC</th><th class="n">Precision in top 5%</th><th class="n">Validation AUC</th>
+              </tr></thead>
+              <tbody>
+                <tr class="final"><td>XGBoost, tabular + SVD 200</td><td class="role">Final model</td><td class="n">0.777 (0.767 to 0.785)</td><td class="n">0.306</td><td class="n">40.7%</td><td class="n">0.735</td></tr>
+                <tr><td>PyTorch MLP, tabular + SVD 200</td><td class="role">Candidate</td><td class="n">0.780 (0.772 to 0.788)</td><td class="n">0.305</td><td class="n">39.3%</td><td class="n">0.740</td></tr>
+                <tr><td>XGBoost, tabular only</td><td class="role">Baseline</td><td class="n">0.752 (0.743 to 0.761)</td><td class="n">0.287</td><td class="n">38.4%</td><td class="n">0.704</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">All numbers are on the test years (2020 to 2021), which were not used to fit or tune any model. AUC measures how well the ranking separates terminated from completed trials: 0.5 is a coin flip, 1.0 is perfect. The final model is the shaded row: the 5-seed averaged XGBoost ensemble on tabular + SVD 200 features. XGBoost and MLP rows are 5-seed averages. Differences and intervals are computed from unrounded estimates, so they can differ by 0.001 from the rounded values shown.</p>
+          <details class="more">
+            <summary>Reference runs: text alone, TF-IDF alone, rank blend</summary>
+            <div class="scroll">
+              <table class="rtab ref">
+                <thead><tr><th>Run</th><th class="n">Test AUC</th></tr></thead>
+                <tbody>
+                  <tr><td>Rank blend: XGBoost + MLP</td><td class="n">0.782</td></tr>
+                  <tr><td>Text features alone (XGBoost)</td><td class="n">0.764</td></tr>
+                  <tr><td>Logistic regression on TF-IDF alone</td><td class="n">0.754</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="note">Single reference runs without intervals or top-5% precision. The blend averages XGBoost and MLP score ranks and adds +0.005 AUC over the final model (95% interval +0.004 to +0.007).</p>
+          </details>
+          <div class="pull">
+            <p><strong>Text lift.</strong> Adding the eligibility-text components raises XGBoost's test AUC from 0.752 to 0.777 (+0.024, 95% CI +0.019 to +0.030).</p>
+          </div>
+          <div class="pull plain">
+            <p><strong>Calibration.</strong> Training up-weights terminated trials, so raw scores are not population probabilities: they average 0.365 against an observed rate of 0.112. A Platt map fit on the validation years (2018&ndash;2019) and evaluated on the 2020&ndash;2021 test years brings the average to 0.117. Calibration error (ECE, decile bins) falls from 0.253 to 0.018, Brier score from 0.162 to 0.089 (always predicting the base rate scores 0.100), and log loss from 0.493 to 0.302. The ranking is unchanged. The dashboard shows the reliability plot.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="findings">
+        <h2>Findings</h2>
+        <div class="body">
+          <dl class="points">
+            <dt id="f-rank">Ranking power</dt>
+            <dd>The 5% of test trials the final model ranks riskiest (1,559 trials) are 40.7% terminated, 3.6 times the 11.2% base rate. That is precision. Those flagged trials hold 635 of the 3,505 terminated test trials, a recall of 18.1%.</dd>
+            <dt id="f-lift">Text lift is stable</dt>
+            <dd>It is +0.0215 &plusmn; 0.0013 across 5 XGBoost seeds (the text model wins all five) and +0.024 for the seed-averaged ensemble. It holds after excluding trials that mention COVID (+0.023) and trials with amendment-style wording (+0.021).</dd>
+            <dt id="f-words">Eligibility text adds predictive signal</dt>
+            <dd>Text alone (0.764) scores above the structured design fields (0.752), and a plain logistic regression on TF-IDF reaches 0.754, so the gain does not depend on a complex model.</dd>
+            <dt id="f-k">Few components are needed</dt>
+            <dd>25 SVD components already give +0.020 AUC, and the gain saturates near k = 100. Validation AUC is flat from k = 100 to 400, so k = 200 is a tie-break, not a sharp optimum.</dd>
+            <dt id="f-proxy">Text partly stands in for who is studied</dt>
+            <dd>Oncology and cardiac language raises risk; vaccine and healthy-volunteer language lowers it, so the lift is not eligibility design alone. The text components carry a large share of model influence, spread thinly across 200 columns.</dd>
+            <dt id="f-model">Why XGBoost is the final model</dt>
+            <dd>The MLP&rsquo;s AUC is higher (0.780 vs 0.777; paired difference +0.004, 95% interval +0.001 to +0.007): distinguishable in the paired comparison, but small. That edge did not carry over to the top of the ranking: precision in the top 5% is 40.7% for XGBoost and 39.3% for the MLP (one standard error is about 1.2 points). With results this close, XGBoost wins on operations: exact TreeSHAP attributions, no PyTorch dependency in the container, and native handling of missing values.</dd>
+            <dt id="f-blend">The blend</dt>
+            <dd>Averaging XGBoost and MLP ranks adds +0.005 AUC over the final model (95% interval +0.004 to +0.007). It is not planned for serving, so the container needs no PyTorch.</dd>
+          </dl>
+        </div>
+      </section>
+
+      <section id="subgroups">
+        <h2>Subgroups</h2>
+        <div class="body">
+          <p>The model flags the 5% highest-scoring trials across the entire test set, one global cutoff (1,559 trials, 40.7% terminated). The table breaks that single shortlist down by group; it does not pick the top 5% separately within each group. Intervals are 95% Wilson intervals on the flagged trials with the cutoff held fixed, so they ignore uncertainty from choosing the cutoff and treat trials as independent. The last column divides precision by the group&rsquo;s own termination rate.</p>
+          <dl class="points">
+            <dt>The shortlist catches 18% of terminations</dt>
+            <dd>The 1,559 flagged trials contain 635 of the 3,505 terminated test trials, a recall of 18.1%.</dd>
+            <dt>Flags concentrate where termination is common</dt>
+            <dd>Phase 2 trials hold 60% of the flagged trials (939 of 1,559) and treatment trials 87% (1,359 of 1,559), because those groups terminate more often and a single cutoff flags more of them.</dd>
+            <dt>Precision is lower where termination is rare</dt>
+            <dd>Trials with no phase (mostly behavioral and device studies) reach 24.7% (19.1% to 31.4%), below the overall 40.7%. They terminate only 6.0% of the time, so the shortlist is still 4.1 times their own rate: a high lift does not mean high precision when the base rate is low. Industry trials (45.5%, 41.5% to 49.5%) sit above other sponsors (37.6%, 34.6% to 40.8%); the table describes that difference but does not isolate why.</dd>
+            <dt>Within-group ranking is weaker than the overall AUC</dt>
+            <dd>In the notebook 08 refit (overall AUC 0.778), AUC is about 0.68 for Phase 2, 0.71 to 0.72 for Phase 3, Phase 4 and no-phase trials, and about 0.79 for Phase 1. Treatment trials match the overall figure (about 0.78); other purposes range from about 0.60 to 0.75, with wide intervals where few trials terminated. Part of the overall AUC comes from separating groups with different termination rates, so ranking within a group is the harder test. Among phases, Phase 2 has the highest precision but the lowest AUC, which fits its high base rate (26.0%).</dd>
+            <dt>Small groups are uninformative</dt>
+            <dd>Where only 24 to 84 trials are flagged (NIH, diagnostic, prevention, supportive care and other purposes), intervals span 15% to 69%. These estimates do not support a claim that performance is similar or different across those groups.</dd>
+          </dl>
+          <div class="scroll">
+            <table class="rtab sub">
+              <thead><tr><th>Group</th><th class="n">Test trials</th><th class="n">Flagged</th><th class="n">Group termination rate</th><th class="n">Precision in top 5% (95% interval)</th><th class="n">Lift over group rate</th></tr></thead>
+              <tbody>
+                <tr class="grp"><td colspan="6">Trial phase</td></tr>
+                <tr><td>Phase 2 (incl. Phase 1/2)</td><td class="n">4,239</td><td class="n">939</td><td class="n">26.0%</td><td class="n">43.9% (40.7% to 47.1%)</td><td class="n">1.7&times;</td></tr>
+                <tr><td>Phase 1 (incl. Early Phase 1)</td><td class="n">3,911</td><td class="n">279</td><td class="n">14.8%</td><td class="n">41.9% (36.3% to 47.8%)</td><td class="n">2.8&times;</td></tr>
+                <tr><td>Phase 3 (incl. Phase 2/3)</td><td class="n">2,460</td><td class="n">110</td><td class="n">19.6%</td><td class="n">40.9% (32.2% to 50.3%)</td><td class="n">2.1&times;</td></tr>
+                <tr><td>Phase 4</td><td class="n">1,636</td><td class="n">45</td><td class="n">12.4%</td><td class="n">33.3% (21.4% to 47.9%)</td><td class="n">2.7&times;</td></tr>
+                <tr><td>Not applicable</td><td class="n">18,906</td><td class="n">186</td><td class="n">6.0%</td><td class="n">24.7% (19.1% to 31.4%)</td><td class="n">4.1&times;</td></tr>
+                <tr class="grp"><td colspan="6">Lead sponsor class</td></tr>
+                <tr><td>Industry</td><td class="n">8,352</td><td class="n">585</td><td class="n">17.4%</td><td class="n">45.5% (41.5% to 49.5%)</td><td class="n">2.6&times;</td></tr>
+                <tr><td>Other (incl. academic)</td><td class="n">21,628</td><td class="n">946</td><td class="n">9.0%</td><td class="n">37.6% (34.6% to 40.8%)</td><td class="n">4.2&times;</td></tr>
+                <tr><td>NIH</td><td class="n">143</td><td class="n">24</td><td class="n">24.5%</td><td class="n">50.0% (31.4% to 68.6%)</td><td class="n">2.0&times;</td></tr>
+                <tr class="grp"><td colspan="6">Primary purpose</td></tr>
+                <tr><td>Treatment</td><td class="n">17,725</td><td class="n">1,359</td><td class="n">14.7%</td><td class="n">42.2% (39.6% to 44.9%)</td><td class="n">2.9&times;</td></tr>
+                <tr><td>Diagnostic</td><td class="n">1,323</td><td class="n">84</td><td class="n">11.4%</td><td class="n">34.5% (25.2% to 45.2%)</td><td class="n">3.0&times;</td></tr>
+                <tr><td>Other</td><td class="n">2,837</td><td class="n">32</td><td class="n">6.9%</td><td class="n">34.4% (20.4% to 51.7%)</td><td class="n">5.0&times;</td></tr>
+                <tr><td>Prevention</td><td class="n">3,510</td><td class="n">32</td><td class="n">6.5%</td><td class="n">31.3% (18.0% to 48.6%)</td><td class="n">4.8&times;</td></tr>
+                <tr><td>Supportive care</td><td class="n">2,367</td><td class="n">34</td><td class="n">5.6%</td><td class="n">26.5% (14.6% to 43.1%)</td><td class="n">4.7&times;</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">Groups with fewer than 20 flagged trials are not shown (Missing phase; Other government, Federal, Network, Individual and Unknown sponsors; Basic science, Health services research, Screening and Device feasibility purposes). Rare phase levels are merged into the nearest main phase.</p>
+          <p class="note">Precision figures use the final model&rsquo;s saved predictions, as in the dashboard. AUC values come from a separate refit in notebook 08, with bootstrap intervals that resample terminated and completed trials separately within each group, and are read from its plot, so treat them as approximate. These results describe where the ranking works, not why trials terminate.</p>
+        </div>
+      </section>
+
+      <section id="validation">
+        <h2>Validation</h2>
+        <div class="body">
+          <h3>Validation mirrors time, not a random shuffle</h3>
+          <div class="split diagram">
+            <svg viewBox="0 0 680 300" role="img" aria-labelledby="st sd">
+              <title id="st">Temporal split of the trial cohort</title>
+              <desc id="sd">Train 2008 to 2017, validate 2018 to 2019, test 2020 to 2021 on one timeline. A random split would mix eras and sponsors across all three sets.</desc>
+              <text class="t2" x="40" y="30">2008</text>
+              <text class="t2" x="468" y="30" text-anchor="middle">2018</text>
+              <text class="t2" x="554" y="30" text-anchor="middle">2020</text>
+              <text class="t2" x="640" y="30" text-anchor="end">2021</text>
+              <rect class="s-train" x="40" y="42" width="426" height="52" rx="4"/>
+              <text class="t1" x="253" y="62" text-anchor="middle" dominant-baseline="central">Train</text>
+              <text class="t2" x="253" y="80" text-anchor="middle" dominant-baseline="central">Start year 2008-2017</text>
+              <rect class="s-val" x="470" y="42" width="82" height="52" rx="4"/>
+              <text class="t1" x="511" y="62" text-anchor="middle" dominant-baseline="central">Validate</text>
+              <text class="t2" x="511" y="80" text-anchor="middle" dominant-baseline="central">2018-2019</text>
+              <rect class="s-test" x="556" y="42" width="84" height="52" rx="4"/>
+              <text class="t1" x="598" y="62" text-anchor="middle" dominant-baseline="central">Test</text>
+              <text class="t2" x="598" y="80" text-anchor="middle" dominant-baseline="central">2020-2021</text>
+              <rect class="s-train" x="40" y="124" width="12" height="12" rx="2"/>
+              <text class="t2" x="62" y="130" dominant-baseline="central">Train: fit TF-IDF, SVD and XGBoost</text>
+              <rect class="s-val" x="40" y="150" width="12" height="12" rx="2"/>
+              <text class="t2" x="62" y="156" dominant-baseline="central">Validate: choose the number of SVD components (k)</text>
+              <rect class="s-test" x="40" y="176" width="12" height="12" rx="2"/>
+              <text class="t2" x="62" y="182" dominant-baseline="central">Test: report final metrics, n = 31,176 trials, 11.2% terminated</text>
+              <rect class="dash" x="40" y="212" width="600" height="40" rx="4"/>
+              <text class="t2" x="340" y="232" text-anchor="middle" dominant-baseline="central">A temporal split tests later trial cohorts and avoids mixing eras across sets.</text>
+              <text class="t2" x="40" y="280" dominant-baseline="central">Trials starting after 2021 are excluded: outcomes not yet observed.</text>
+            </svg>
+          </div>
+          <p class="note">Label: Completed is negative and Terminated positive. Withdrawn trials (stopped before enrolling anyone) are excluded and analyzed separately. Unknown-status trials are bounded under extreme assumptions rather than ignored; the bounds are wide.</p>
+        </div>
+      </section>
+
+      <section id="leakage">
+        <h2>Leakage control</h2>
+        <div class="body">
+          <p>AACT is a latest-snapshot database, not a protocol-time record, so the tables mix registration-time fields with fields written after the outcome. The model uses fields selected to approximate registration-time information: everything obviously written later is excluded. That is a field choice, not a verified day-one record, and it appears below as an open caveat.</p>
+          <div class="scroll">
+            <table class="matrix">
+              <thead><tr><th>Field group</th><th>Decision</th><th>Why</th><th>Evidence</th></tr></thead>
+              <tbody>
+                <tr><td>Actual enrollment (<code>enrollment_type</code> = ACTUAL)</td><td><span class="pill ex">Excluded</span></td><td>Realized enrollment can reflect information accumulated after registration, so it is not treated as a registration-time feature</td><td class="ev">Value audit; estimated enrollment also dropped</td></tr>
+                <tr><td><code>why_stopped</code></td><td><span class="pill ex">Excluded</span></td><td>Written at termination</td><td class="ev">Not a predictor. Used only for label validation; the stop-reason error analysis is pending</td></tr>
+                <tr><td>Completion dates, results fields</td><td><span class="pill ex">Excluded</span></td><td>Written after the outcome</td><td class="ev">Excluded by construction</td></tr>
+                <tr><td>Last-update date, amendment and version counts</td><td><span class="pill ex">Excluded</span></td><td>Record recency tracks trial age and outcome</td><td class="ev">Excluded by construction</td></tr>
+                <tr><td>FDA-regulated drug and device flags</td><td><span class="pill ex">Excluded</span></td><td>Dropped from the main model</td><td class="ev">n/a</td></tr>
+                <tr><td>Site, country and condition counts</td><td><span class="pill abl">Ablation only</span></td><td>Accumulate after registration</td><td class="ev">Test AUC 0.7513 to 0.7493 when added: no gain</td></tr>
+                <tr><td><code>healthy_volunteers</code></td><td><span class="pill use">Used, checked</span></td><td>Registered eligibility flag; the top feature by SHAP in the baseline (about 21% of total attribution)</td><td class="ev">Dropping it costs 0.007 test AUC (0.7513 to 0.7442) and 0.004 PR-AUC; the termination gap (4.5% vs 14.8%) is stable across splits and years and holds within every phase; sponsor mix is the same for both values. Baseline, single fit</td></tr>
+                <tr><td>Remaining structured design fields</td><td><span class="pill use">Used</span></td><td>Phase, sponsor class, allocation, masking and similar design choices</td><td class="ev">Baseline test AUC 0.752</td></tr>
+                <tr><td>Eligibility text</td><td><span class="pill use">Used</span></td><td>Part of the protocol record; transforms fit on the training period only</td><td class="ev">+0.024 AUC (CI +0.019 to +0.030); partly a therapeutic-area proxy</td></tr>
+                <tr><td>AACT is a latest-snapshot database</td><td><span class="pill cav">Open caveat</span></td><td>Kept fields may have been edited after registration</td><td class="ev">Mitigated by field choice; not checked against historical versions</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">Flat metrics after adding the count features show they add nothing here. They do not prove the remaining features are leak-free. For <code>healthy_volunteers</code>, the strongest baseline feature, the checks above show a stable relationship and a modest cost of removing it, which argues against drift or a post-outcome edit but cannot rule out an edit to the latest AACT record. The drop-and-compare used the structured baseline, not the final text model.</p>
+        </div>
+      </section>
+
+      <section id="limits">
+        <h2>Limits</h2>
+        <div class="body">
+          <ul class="plain">
+            <li>Registry data is sponsor-reported and unevenly kept up to date.</li>
+            <li>Trials with Unknown status are excluded from training; if that missingness tracks termination risk, estimates lean optimistic.</li>
+            <li>Associations only. Nothing here supports a causal claim about design choices.</li>
+            <li>Registration-time describes the field choice, not a verified day-one record, because AACT keeps only the latest version.</li>
+            <li>Subgroup estimates are noisy where few trials are flagged (see the Subgroups section).</li>
+            <li>Open checks: error analysis by stop-reason (<code>why_stopped</code>) has not started, and the <code>healthy_volunteers</code> drop-and-compare was a single fit on the structured baseline, not yet repeated on the final text model across seeds.</li>
+            <li>The API and pretrained-embedding experiments are planned and are not part of these results. Workflow and project status are in the repository README.</li>
+            <li>The test window overlaps the COVID era; performance on later years is untested, and there is no retraining loop because there is no production label feedback.</li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>Source: Clinical Trials Transformation Initiative, AACT Database (aact.ctti-clinicaltrials.org). Figures are the final evaluation on the 2020&ndash;2021 test years (5-seed XGBoost ensemble), on the AACT snapshot of 2026-09-29.</footer>
+  </div>
+</div>
+
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc > ol > li > a[href^="#"]'));
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  var byId = {}, sections = [];
+  links.forEach(function (a) {
+    var el = document.getElementById(a.getAttribute('href').slice(1));
+    if (el) { byId[el.id] = a; sections.push(el); }
+  });
+  var visible = new Set();
+  function paint() {
+    var current = null, i, j;
+    for (i = 0; i < sections.length; i++) {
+      if (visible.has(sections[i].id)) { current = sections[i].id; break; }
+    }
+    if (!current) {
+      for (j = sections.length - 1; j >= 0; j--) {
+        if (sections[j].getBoundingClientRect().top < window.innerHeight * 0.4) { current = sections[j].id; break; }
+      }
+    }
+    links.forEach(function (a) {
+      a.removeAttribute('aria-current');
+      a.parentNode.classList.remove('open');
+    });
+    if (current && byId[current]) {
+      byId[current].setAttribute('aria-current', 'true');
+      byId[current].parentNode.classList.add('open');
+    }
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) visible.add(e.target.id); else visible.delete(e.target.id);
+    });
+    paint();
+  }, { rootMargin: '-15% 0px -60% 0px', threshold: 0 });
+  sections.forEach(function (s) { io.observe(s); });
+  paint();
+})();
+</script>
+</body>
+</html>
