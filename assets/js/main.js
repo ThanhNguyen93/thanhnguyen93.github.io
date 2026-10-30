@@ -9,7 +9,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 const nav = document.querySelector('.left-sidebar');
-const sections = ['hero', 'skills', 'projects', 'about'];
+const sections = ['hero', 'projects', 'about', 'skills', 'contact'];
 const navLinks = {};
 document.querySelectorAll('.sidebar-nav a[data-section]').forEach(a => {
   navLinks[a.dataset.section] = a;
@@ -37,23 +37,31 @@ function updateProgress() {
 window.addEventListener('scroll', updateProgress, { passive: true });
 updateProgress();
 
+// project-1=clinical trial risk, 2=osteoporosis, 3=ISCVAM, 4=Hiring Intelligence, 5=MAUDE, 6=VAERS
 const searchInput = document.getElementById('search-input');
 const searchMap = [
-  { terms: ['skill','python','r','spark','xgboost','scikit','ml','machine','learning','random forest','svm','logistic','association'], target: 'skills' },
-  { terms: ['spark','pyspark','big data','health','eda','population','scale','distributed','income','healthcare spending','snowflake'], target: 'project-1' },
-  { terms: ['osteoporosis','bone','classification','roc','auc','imbalance','prediction'], target: 'project-2' },
-  { terms: ['covid','vaccine','vaers','adverse','symptom','moderna','pfizer','cdc','fda','mining','rule'], target: 'project-3' },
-  { terms: ['maude','device','shiny','dashboard','harm','trend'], target: 'project-4' },
-  { terms: ['iscvam','single cell','multiomics','genomics','rna','atac','hci','bioinformatics','interactive'], target: 'project-5' },
-  { terms: ['about','bio','background','contact','email','linkedin','github'], target: 'about' },
+  { terms: ['clinical trial','trial','aact','clinicaltrials','termination','nlp','cloud run','calibration'], target: 'project-1' },
+  { terms: ['osteoporosis','bone','classification','roc','auc','imbalance','case-control','recall','ehr'], target: 'project-2' },
+  { terms: ['iscvam','single cell','multiomics','genomics','rna','atac','hci','bioinformatics','pipeline','slurm','hpc','oncology'], target: 'project-3' },
+  { terms: ['hiring','recruit','recruitment','streamlit','candidate','predictor'], target: 'project-4' },
+  { terms: ['maude','device','shiny','dashboard','harm','trend','fda'], target: 'project-5' },
+  { terms: ['covid','vaccine','vaers','adverse','symptom','moderna','pfizer','cdc','mining','rule','association'], target: 'project-6' },
+  { terms: ['skill','python','sql','xgboost','scikit','machine','learning','random forest','svm','logistic','statistics','databricks','snowflake','docker','git'], target: 'skills' },
+  { terms: ['about','bio','background','publication','publications','doi','journal','paper','author'], target: 'about' },
+  { terms: ['contact','email','linkedin','github'], target: 'contact' },
 ];
+// Short terms (<=3 chars) must match exactly so "r" or "ml" don't hijack every query.
+function termMatches(val, t) {
+  if (t.length <= 3) return val === t;
+  return val.length >= 2 && (val.includes(t) || t.includes(val));
+}
 if(searchInput) {
   searchInput.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       const val = searchInput.value.toLowerCase().trim();
       if (!val) return;
       for (const entry of searchMap) {
-        if (entry.terms.some(t => val.includes(t) || t.includes(val))) {
+        if (entry.terms.some(t => termMatches(val, t))) {
           const el = document.getElementById(entry.target);
           if (el) {
             el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -69,14 +77,13 @@ if(searchInput) {
   });
 }
 
-// project-1=spark, 2=osteo, 3=vaers, 4=maude, 5=iscvam
+// Category filters (ids as above)
 const catMap = {
-  'ml':            ['project-2', 'project-3'],
-  'health':        ['project-1', 'project-2', 'project-3', 'project-4'],
-  'bioinformatics':['project-5'],
-  'visualization': ['project-4', 'project-5'],
-  'bigdata':       ['project-1'],
-  'all':           ['project-1','project-2','project-3','project-4','project-5'],
+  'ml':          ['project-1', 'project-2', 'project-4', 'project-6'],
+  'health':      ['project-1', 'project-2', 'project-3', 'project-5', 'project-6'],
+  'engineering': ['project-1', 'project-3', 'project-4'],
+  'apps':        ['project-1', 'project-4', 'project-5'],
+  'all':         ['project-1', 'project-2', 'project-3', 'project-4', 'project-5', 'project-6'],
 };
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', () => {

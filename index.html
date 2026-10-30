@@ -29,10 +29,10 @@
     <div class="sidebar-divider"></div>
     <ul class="sidebar-nav">
       <li><a href="#hero" class="active" data-section="hero"><span class="nav-icon">⌂</span> Home</a></li>
-      <li><a href="#skills" data-section="skills"><span class="nav-icon">⚙</span> Skills</a></li>
       <li><a href="#projects" data-section="projects"><span class="nav-icon">◈</span> Projects</a></li>
       <li><a href="#about" data-section="about"><span class="nav-icon">◯</span> About</a></li>
-      <li><a href="#about" data-section="contact"><span class="nav-icon">✉</span> Contact</a></li>
+      <li><a href="#skills" data-section="skills"><span class="nav-icon">⚙</span> Skills</a></li>
+      <li><a href="#contact" data-section="contact"><span class="nav-icon">✉</span> Contact</a></li>
     </ul>
     <div class="sidebar-divider"></div>
     <div class="sidebar-socials">
@@ -59,82 +59,11 @@
       </div>
     </section>
 
-  <!-- SKILLS -->
-    <section id="skills" class="content-section">
-      <p class="eyebrow reveal">Capabilities</p>
-      <h2 class="section-title reveal">Technical Skills</h2>
-      <p class="section-sub reveal">Full-stack data science from raw data to deployed model.</p>
-      <div class="skills-grid reveal">
-
-        <div class="skill-block">
-          <div class="skill-icon">🐍</div>
-          <div class="skill-name">Languages</div>
-          <div class="skill-tags">
-            <span class="tag tag-teal">Python</span>
-            <span class="tag tag-teal">R</span>
-            <span class="tag tag-teal">SQL</span>
-          </div>
-        </div>
-
-        <div class="skill-block">
-          <div class="skill-icon">⚙️</div>
-          <div class="skill-name">Data Science</div>
-          <div class="skill-tags">
-            <span class="tag tag-navy">Machine Learning</span>
-            <span class="tag tag-navy">Statistical Modeling</span>
-            <span class="tag tag-navy">Feature Engineering</span>
-            <span class="tag tag-navy">Hypothesis Testing</span>
-          </div>
-        </div>
-
-        <div class="skill-block">
-          <div class="skill-icon">⚡</div>
-          <div class="skill-name">Big Data &amp; Distributed Computing</div>
-          <div class="skill-tags">
-            <span class="tag tag-coral">PySpark</span>
-            <span class="tag tag-coral">HPC (SLURM)</span>
-            <span class="tag tag-coral">Parallel Processing</span>
-          </div>
-        </div>
-
-        <div class="skill-block">
-          <div class="skill-icon">🐳</div>
-          <div class="skill-name">MLOps &amp; Deployment</div>
-          <div class="skill-tags">
-            <span class="tag tag-navy">Docker</span>
-            <span class="tag tag-navy">Containerized Workflows</span>
-            <span class="tag tag-navy">Reproducible Pipelines</span>
-          </div>
-        </div>
-
-        <div class="skill-block">
-          <div class="skill-icon">📈</div>
-          <div class="skill-name">Data Visualization &amp; Applications</div>
-          <div class="skill-tags">
-            <span class="tag tag-muted">R Shiny</span>
-            <span class="tag tag-muted">Plotly</span>
-            <span class="tag tag-muted">Tableau</span>
-          </div>
-        </div>
-
-        <div class="skill-block">
-          <div class="skill-icon">🛠️</div>
-          <div class="skill-name">Tools &amp; Environment</div>
-          <div class="skill-tags">
-            <span class="tag tag-muted">Git</span>
-            <span class="tag tag-muted">Jupyter Notebook</span>
-            <span class="tag tag-muted">VS Code</span>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
     <!-- PROJECTS -->
     <section id="projects" class="content-section">
       <p class="eyebrow reveal">Work</p>
       <h2 class="section-title reveal">Portfolio Projects</h2>
-      <p class="section-sub reveal">Health data, clinical ML, large-scale EDA, and bioinformatics research.</p>
+      <p class="section-sub reveal">Complex data analysis, exploratory data analysis, predictive modeling, and deployed ML applications.</p>
 
       <div class="projects-list reveal">
 
@@ -190,7 +119,6 @@
             <a href="https://thanhnguyen93.github.io/projects/project-clinical-trials.html" 
             class="link-btn primary">View Executive Summary →</a>
          
-
             <a href="https://github.com/ThanhNguyen93/clinical_trials_termination"
               target="_blank" rel="noopener noreferrer"
               class="link-btn">View Source Code ↗</a>
@@ -206,7 +134,7 @@
         <!-- 02 — Osteoporosis -->
         <div class="project-card" id="project-2">
           <div>
-            <p class="project-num">03 — Clinical ML · Epidemiology · Python</p>
+            <p class="project-num">02 — Clinical ML · Epidemiology · Python</p>
             <h3 class="project-title">Osteoporosis Risk — Recall Asymmetry in Matched Case-Control Data</h3>
             <p class="project-desc"><strong>Why do models miss cases on a perfectly balanced dataset?</strong> In a 1:1 matched cohort of 61,026 osteoporosis patients, classifiers from logistic regression and linear SVM to tree ensembles and a feed-forward neural network miss 40–49% of cases, despite exact class balance and ROC-AUCs up to 0.79. After validating the cohort by reproducing a published hyponatremia odds ratio (3.98 vs. 3.97), I use diagnostic analyses to test whether the recall gap stems from model limitations or from properties of the matched observational data.</p>
             <div class="project-tags">
@@ -231,10 +159,10 @@
            <!-- 03 — ISCVAM -->
         <div class="project-card" id="project-3">
           <div>
-            <p class="project-num">04 — Data Pipeline Engineering - Clinical Analytics Platform</p>
+            <p class="project-num">03 — Data Pipeline Engineering - Clinical Analytics Platform</p>
             <h3 class="project-title">ISCVAM — Multi-Study Oncology Data Pipelines <span class="new-badge"> Cancer Research</span></h3>
             <p class="project-desc">
-              Experimental scientists had no direct computational path to their own data, leaving finished experiments stuck in an analyst queue. I built the automated data layer that removed the delay: two containerized R pipelines handling end-to-end ingestion, quality control, and cell-type annotation across 198 studies (~6.3M cells). Orchestrated on Slurm job arrays with size-aware scheduling and per-step checkpointing, the pipelines convert raw sequencing output into standardized HDF5 datasets the platform reads directly. Platform accepted for presentation at AACR 2023.
+              Experimental scientists had no direct computational path to their own data, leaving finished experiments stuck in an analyst queue. I built the automated data layer that removed the delay: two containerized R pipelines handling end-to-end ingestion, quality control, and cell-type annotation across 198 studies (~6.3M cells). Orchestrated on Slurm job arrays with size-aware scheduling and per-step checkpointing, the pipelines convert raw sequencing output into standardized HDF5 datasets the platform reads directly. I presented the platform as first author at AACR 2023.</p>
               <div class="project-tags">
               <span class="tag tag-coral">R</span>
               <span class="tag tag-coral">Pipeline design</span>
@@ -259,7 +187,7 @@
     <!-- 04 — Hiring Intelligence -->
     <div class="project-card featured" id="project-4">
       <div>
-        <p class="project-num">05 — ML App · Streamlit · Scikit-learn</p>
+        <p class="project-num">04 — ML App · Streamlit · Scikit-learn</p>
         <h3 class="project-title">Hiring Intelligence — Recruitment Outcome Predictor</h3>
         <p class="project-desc">End-to-end <strong>ML web app </strong>predicting candidate hiring outcomes using a tuned Gradient Boosting classifier — 94.7% precision, 93.3% ROC-AUC on 1,500 recruitment records. The web app features an <strong>EDA explorer</strong> and <strong>live candidate predictor</strong> with probability gauge and radar chart. 
           Key finding: recruitment strategy (SHAP = 3.052) dominates all candidate-level signals — stronger than interview score, skill score, or education combined. A useful reminder that process design shapes outcomes as much as candidate quality does.
@@ -289,7 +217,7 @@
         <!-- 05 — MAUDE RShiny -->
         <div class="project-card" id="project-5">
           <div>
-            <p class="project-num">06 — FDA Data · R · Interactive App</p>
+            <p class="project-num">05 — FDA Data · R · Interactive App</p>
             <h3 class="project-title">FDA Medical Device Harm Trends — RShiny Dashboard</h3>
             <p class="project-desc">Built an interactive visualization app over the 2016 MAUDE (FDA medical device passive surveillance) dataset. Users explore temporal harm trends across device categories and manufacturers. Demonstrates stakeholder-facing data product design.</p>
             <div class="project-tags">
@@ -314,7 +242,7 @@
         <!-- 06 — VAERS Association Rule Mining -->
         <div class="project-card" id="project-6">
           <div>
-            <p class="project-num">07 — Public Health · Unsupervised Learning</p>
+            <p class="project-num">06 — Public Health · Unsupervised Learning</p>
             <h3 class="project-title">COVID-19 Vaccine Adverse Symptoms — Association Rule Mining</h3>
             <p class="project-desc">Mined COVID-19 adverse-event reports from <strong>VAERS (CDC/FDA)</strong> using the Apriori algorithm to surface frequent adverse-symptom patterns and compare reported events between <strong>Moderna and Pfizer</strong>. Key insight: adverse-event patterns were broadly similar across both vaccines, suggesting perceived safety differences may be driven more by reporting frequency than by fundamentally different symptom profiles.</p>
             <div class="project-tags">
@@ -327,7 +255,6 @@
           </div>
           <div class="project-links">
             <a href="projects/project-vaers.html" class="link-btn primary">View Project →</a>
-            <a href="https://github.com/ThanhNguyen93" target="_blank" class="link-btn">GitHub ↗</a>
             <div class="project-preview">
               <img src="assets/img/vaers-screenshot.png" alt="VAERS association rule mining screenshot">
             </div>
@@ -348,12 +275,111 @@
         <ul class="about-list">
           <li><strong>Scale &amp; Engineering Rigor:</strong> Engineered parallelized R/Python ETL and analysis pipelines on HPC/SLURM clusters with run-tracking checkpointing (6.3M+ cells across 198 studies).</li>
           <li><strong>Methodological Depth:</strong> Paired machine learning with advanced observational study design, including matched case-control pairing, conditional logistic regression, and Rubin&rsquo;s rules for multiple imputation.</li>
-          <li><strong>Oncology Genomics:</strong> Built analysis pipelines for single-cell RNA-seq, single-cell ATAC-seq, and multiome data&mdash;covering QC, dimension reduction, clustering, and annotation with Seurat and Signac&mdash;with additional work in spatial transcriptomics and bulk sequencing.</li>
           <li><strong>Real-World &amp; Federal Data:</strong> Executed hands-on data retrieval, extraction, and modeling across structured and unstructured sources, including hospital EHR data, FDA MAUDE, and VAERS safety databases.</li>
           <li><strong>Scientific Impact:</strong> Co-authored peer-reviewed research in top-tier journals (<em>Clinical Cancer Research</em> and <em>Cancer Research</em>) and presented first-author platform work at AACR 2023.</li>
+          <li><strong>Oncology Genomics:</strong> Built analysis pipelines for single-cell RNA-seq, single-cell ATAC-seq, and multiome data&mdash;covering QC, dimension reduction, clustering, and annotation with Seurat and Signac&mdash;with additional work in spatial transcriptomics and bulk sequencing.</li>
+        </ul>
+
+        <h3 class="about-subhead">Publications</h3>
+        <p>Published under Nguyen, T. / Nguyen, T.N.</p>
+        <ul class="about-list">
+          <li>Sriramareddy SN, &hellip;, Nguyen T, &hellip;, Smalley KSM. GDF15 reprograms the microenvironment to drive liver metastasis of uveal melanoma. <em>Cancer Res.</em> 2026. <a href="https://doi.org/10.1158/0008-5472.CAN-25-0536" target="_blank" rel="noopener">doi:10.1158/0008-5472.CAN-25-0536</a></li>
+          <li>Li J, &hellip;, Nguyen T, &hellip;, Smalley KSM. Single cell characterization of the cellular landscape of acral melanoma identifies novel targets for immunotherapy. <em>Clin Cancer Res.</em> 2022. <a href="https://doi.org/10.1158/1078-0432.CCR-21-3145" target="_blank" rel="noopener">doi:10.1158/1078-0432.CCR-21-3145</a></li>
         </ul>
       </div>
       
+    </section>
+
+  <!-- SKILLS -->
+    <section id="skills" class="content-section">
+      <p class="eyebrow reveal">Capabilities</p>
+      <h2 class="section-title reveal">Technical Skills</h2>
+      <p class="section-sub reveal">Tools I use from raw data to deployed models.</p>
+      <div class="skills-grid reveal">
+
+        <div class="skill-block">
+          <div class="skill-icon">🐍</div>
+          <div class="skill-name">Programming</div>
+          <div class="skill-tags">
+            <span class="tag tag-teal">Python (pandas, scikit-learn, XGBoost)</span>
+            <span class="tag tag-teal">R (dplyr, ggplot2, caret, Shiny, parallel)</span>
+            <span class="tag tag-teal">SQL (SQL Server, Databricks)</span>
+            <span class="tag tag-teal">Bash</span>
+          </div>
+        </div>
+
+        <div class="skill-block">
+          <div class="skill-icon">📐</div>
+          <div class="skill-name">Statistics &amp; Study Design</div>
+          <div class="skill-tags">
+            <span class="tag tag-navy">Matched case-control design</span>
+            <span class="tag tag-navy">Conditional logistic regression</span>
+            <span class="tag tag-navy">Multiple imputation (Rubin&rsquo;s rules)</span>
+            <span class="tag tag-navy">Hypothesis testing</span>
+            <span class="tag tag-navy">Wilson confidence intervals</span>
+            <span class="tag tag-navy">Subgroup analysis</span>
+            <span class="tag tag-navy">Calibration</span>
+            <span class="tag tag-navy">Statistical modeling &amp; inference</span>
+          </div>
+        </div>
+
+        <div class="skill-block">
+          <div class="skill-icon">🤖</div>
+          <div class="skill-name">Machine Learning</div>
+          <div class="skill-tags">
+            <span class="tag tag-navy">Classification (logistic regression, random forest, SVM, XGBoost, feedforward neural networks)</span>
+            <span class="tag tag-navy">Ensembles</span>
+            <span class="tag tag-navy">Clustering</span>
+            <span class="tag tag-navy">NLP (TF-IDF + SVD)</span>
+            <span class="tag tag-navy">Feature engineering</span>
+            <span class="tag tag-navy">Model evaluation (ROC-AUC, PR-AUC, calibration, temporal validation)</span>
+            <span class="tag tag-navy">SHAP</span>
+          </div>
+        </div>
+
+        <div class="skill-block">
+          <div class="skill-icon">⚡</div>
+          <div class="skill-name">Engineering &amp; Reproducibility</div>
+          <div class="skill-tags">
+            <span class="tag tag-coral">ETL / data pipeline automation</span>
+            <span class="tag tag-coral">API data retrieval</span>
+            <span class="tag tag-coral">Data validation &amp; leakage checks</span>
+            <span class="tag tag-coral">Git/GitHub</span>
+            <span class="tag tag-coral">Docker</span>
+            <span class="tag tag-coral">Google Cloud Run</span>
+            <span class="tag tag-coral">Databricks</span>
+            <span class="tag tag-coral">Snowflake</span>
+            <span class="tag tag-coral">PySpark</span>
+            <span class="tag tag-coral">Linux/CLI</span>
+            <span class="tag tag-coral">HPC (SLURM)</span>
+          </div>
+        </div>
+
+        <div class="skill-block">
+          <div class="skill-icon">🔒</div>
+          <div class="skill-name">Data Privacy</div>
+          <div class="skill-tags">
+            <span class="tag tag-muted">HIPAA-regulated and IRB-governed research data</span>
+          </div>
+        </div>
+
+        <div class="skill-block">
+          <div class="skill-icon">📈</div>
+          <div class="skill-name">Visualization &amp; Communication</div>
+          <div class="skill-tags">
+            <span class="tag tag-muted">R Shiny</span>
+            <span class="tag tag-muted">Tableau</span>
+            <span class="tag tag-muted">Streamlit</span>
+            <span class="tag tag-muted">Plotly</span>
+            <span class="tag tag-muted">Technical reports, user documentation &amp; training</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="content-section">
       <div style="margin-top:2rem;">
         <p class="eyebrow reveal">Contact</p>
         <h3 style="font-family:'Fraunces',serif;font-weight:600;font-size:1.2rem;margin-bottom:0.2rem;" class="reveal">Get in Touch</h3>
@@ -364,6 +390,7 @@
           </ul>
       </div>
     </section>
+
 
   </main>
 
@@ -386,26 +413,27 @@
       <div class="rsb-heading"><span class="rsb-heading-icon">#</span><span class="rsb-heading-text">Categories</span></div>
       <div class="cat-grid">
         <button class="cat-btn active" data-filter="all">All Projects</button>
-        <button class="cat-btn" data-filter="ml">ML / Modeling</button>
+        <button class="cat-btn" data-filter="ml">Machine Learning &amp; Modeling</button>
         <button class="cat-btn" data-filter="health">Health Data</button>
-        <button class="cat-btn" data-filter="bioinformatics">Bioinformatics</button>
-        <button class="cat-btn" data-filter="visualization">Visualization</button>
-        <button class="cat-btn" data-filter="bigdata">Big Data</button>
+        <button class="cat-btn" data-filter="engineering">Data Engineering &amp; Pipelines</button>
+        <button class="cat-btn" data-filter="apps">Dashboards &amp; Apps</button>
       </div>
     </div>
     <div class="rsb-divider"></div>
     <div class="rsb-section">
       <div class="rsb-heading"><span class="rsb-heading-icon">🏷</span><span class="rsb-heading-text">Tags</span></div>
       <div class="tag-cloud">
-        <span class="tag-chip" data-jump="project-1">PySpark</span>
-        <span class="tag-chip" data-jump="project-1">Data Engineering</span>
-        <span class="tag-chip" data-jump="project-5">Unsupervised learning</span>
-        <span class="tag-chip" data-jump="project-5">Public Health</span>
-        <span class="tag-chip" data-jump="project-3">RShiny/Deployment</span>
-        <span class="tag-chip" data-jump="project-3">FDA/surveillance data</span>
-        <span class="tag-chip" data-jump="project-4">Bioinformatics</span>
-        <span class="tag-chip" data-jump="project-4">Deployment</span>
-        <span class="tag-chip" data-jump="skills">Machine learning</span>
+        <span class="tag-chip" data-jump="project-1">Predictive Modeling / ML</span>
+        <span class="tag-chip" data-jump="project-4">Exploratory Data Analysis (EDA)</span>
+        <span class="tag-chip" data-jump="project-3">ETL &amp; Data Pipelines</span>
+        <span class="tag-chip" data-jump="project-2">Statistical Modeling</span>
+        <span class="tag-chip" data-jump="project-2">EHR Data</span>
+        <span class="tag-chip" data-jump="project-2">Epidemiology</span>
+        <span class="tag-chip" data-jump="project-5">Surveillance Data</span>
+        <span class="tag-chip" data-jump="project-6">Public Health</span>
+        <span class="tag-chip" data-jump="project-6">Unsupervised Learning</span>
+        <span class="tag-chip" data-jump="project-4">Interactive Web Apps</span>
+        <span class="tag-chip" data-jump="project-1">Deployment</span>
         <span class="tag-chip" data-jump="skills">Python</span>
         <span class="tag-chip" data-jump="skills">R</span>
       </div>
